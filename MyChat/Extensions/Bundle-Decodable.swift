@@ -1,10 +1,3 @@
-//
-//  Bundle-Decodable.swift
-//  Chats
-//
-//  Created by Алексей Пархоменко on 09.01.2020.
-//  Copyright © 2020 Алексей Пархоменко. All rights reserved.
-//
 
 import Foundation
 import UIKit

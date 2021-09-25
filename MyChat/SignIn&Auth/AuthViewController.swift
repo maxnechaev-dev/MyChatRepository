@@ -18,6 +18,9 @@ class AuthViewController: UIViewController {
     let googleButton = UIButton(title: "Google", titleColor: .black, backgroundColor: .white, isShadow: true)
     let emailButton = UIButton(title: "Email", titleColor: .white, backgroundColor: .buttonDark())
     let loginButton = UIButton(title: "Login", titleColor: .buttonRed(), backgroundColor: .white, isShadow: true)
+    
+    let signUpVC = SignUpViewController()
+    let loginVC = LoginViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +28,22 @@ class AuthViewController: UIViewController {
         googleButton.customizeGoogleButton()
         view.backgroundColor = .white
         setupConstraints()
+        
+        signUpVC.delegate = self
+        loginVC.delegate = self
+        
+        emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func emailButtonTapped() {
+        print(#function)
+        present(signUpVC, animated: true, completion: nil)
+    }
+    
+    @objc private func loginButtonTapped() {
+        print(#function)
+        present(loginVC, animated: true, completion: nil)
     }
 }
 
@@ -58,6 +77,18 @@ extension AuthViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
         ])
     }
+}
+
+extension AuthViewController: AuthNavigatingDelegate {
+    
+    func toLoginVC() {
+        self.present(loginVC, animated: true, completion: nil)
+    }
+    
+    func toSignUpVC() {
+        self.present(signUpVC, animated: true, completion: nil)
+    }
+    
 }
 
 

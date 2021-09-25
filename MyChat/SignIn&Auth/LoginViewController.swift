@@ -31,11 +31,45 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    weak var delegate: AuthNavigatingDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         googleButton.customizeGoogleButton()
         view.backgroundColor = .white
         setupConstraints()
+        
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func loginButtonTapped() {
+        AuthService.shared.login(
+            email: emailTextField.text!,
+            password: passwordTextField.text!) { (result) in
+                switch result {
+                case .success(let user):
+                    self.showAlert(with: "Успешно!", and: "Вы авторизованы!") {
+                        FirestoreService.shared.getUserData(user: user) { (result) in
+                            switch result {
+                            case .success(let muser):
+                                self.present(MainTabBarController(), animated: true, completion: nil)
+                            case .failure(_):
+                                self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                            }
+                        }
+                        
+                    }
+                case .failure(let error):
+                    self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+                }
+        }
+    }
+    
+    @objc private func signUpButtonTapped() {
+        dismiss(animated: true) {
+            self.delegate?.toSignUpVC()
+        }
     }
 }
 
@@ -75,7 +109,7 @@ extension LoginViewController {
         ])
         
         NSLayoutConstraint.activate([
-            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
+            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
             bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40)
         ])
     }
