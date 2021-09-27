@@ -13,7 +13,7 @@ class AddPhotoView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = #imageLiteral(resourceName: "avatar")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.layer.borderWidth = 1
@@ -63,7 +63,7 @@ class AddPhotoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        circleImageView.contentMode = .scaleAspectFit
+        circleImageView.contentMode = .scaleAspectFill
         circleImageView.layer.masksToBounds = true
         circleImageView.layer.cornerRadius = circleImageView.frame.width / 2
     }

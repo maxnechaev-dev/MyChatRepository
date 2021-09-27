@@ -9,7 +9,7 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    let welcomeLabel = UILabel(text: "Welcome back!", font: .avenir26())
+    let welcomeLabel = UILabel(text: "🎉 Welcome back!", font: .avenir26())
     
     let loginWithLabel = UILabel(text: "Login with")
     let orLabel = UILabel(text: "or")
@@ -53,7 +53,9 @@ class LoginViewController: UIViewController {
                         FirestoreService.shared.getUserData(user: user) { (result) in
                             switch result {
                             case .success(let muser):
-                                self.present(MainTabBarController(), animated: true, completion: nil)
+                                let mainTabBarVC = MainTabBarController(currentUser: muser)
+                                mainTabBarVC.modalPresentationStyle = .fullScreen
+                                self.present(mainTabBarVC, animated: true, completion: nil)
                             case .failure(_):
                                 self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
                             }
@@ -78,13 +80,13 @@ class LoginViewController: UIViewController {
 extension LoginViewController {
     private func setupConstraints() {
         
-        let loginWithView = ButtonFormView(label: loginWithLabel, button: googleButton)
+        //let loginWithView = ButtonFormView(label: loginWithLabel, button: googleButton)
         let emailStackView = UIStackView(arrangedSubviews: [emailLabel, emailTextField],
                                          axis: .vertical, spacing: 0)
         let passwordStackView = UIStackView(arrangedSubviews: [passwordLabel, passwordTextField],
                                             axis: .vertical, spacing: 0)
         loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        let stackView = UIStackView(arrangedSubviews: [loginWithView, orLabel, emailStackView, passwordStackView, loginButton],
+        let stackView = UIStackView(arrangedSubviews: [emailStackView, passwordStackView, loginButton],
                                     axis: .vertical, spacing: 40)
         
         let bottomStackView = UIStackView(arrangedSubviews: [needAnAccountLabel, signUpButton], axis: .horizontal, spacing: 5)

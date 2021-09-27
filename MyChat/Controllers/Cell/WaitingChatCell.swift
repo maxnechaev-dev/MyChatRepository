@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class WaitingChatCell: UICollectionViewCell, SelfConfiguringCell {
     
@@ -23,12 +24,13 @@ class WaitingChatCell: UICollectionViewCell, SelfConfiguringCell {
     
     func configure<U>(with value: U) {
         guard let chat: MChat = value as? MChat else { return }
-        friendImageView.image = UIImage(named: chat.userImageString)
+        friendImageView.sd_setImage(with: URL(string: chat.friendAvatarStringURL), completed: nil)
     }
     
     private func setupConstraints() {
         friendImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(friendImageView)
+        friendImageView.contentMode = .scaleAspectFill
         
         NSLayoutConstraint.activate([
             friendImageView.leadingAnchor.constraint(equalTo: leadingAnchor),

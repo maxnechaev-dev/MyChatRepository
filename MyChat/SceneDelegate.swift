@@ -26,7 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 switch result {
                 
                 case .success(let mUser):
-                    self.window?.rootViewController = MainTabBarController()
+                    let mainTabBarVC = MainTabBarController(currentUser: mUser)
+                    mainTabBarVC.modalPresentationStyle = .fullScreen
+                    self.window?.rootViewController = mainTabBarVC
                 case .failure(let error):
                     self.window?.rootViewController = AuthViewController()
                 }

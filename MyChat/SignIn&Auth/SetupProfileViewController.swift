@@ -41,22 +41,42 @@ class SetupProfileViewController: UIViewController {
         view.backgroundColor = .white
         setupConstraints()
         goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+        fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
     }
     
     @objc private func goToChatsButtonTapped() {
         FirestoreService.shared.saveProfileWith(id: currentUser.uid, email: currentUser.email!, username: fullNameTextField.text,
-                                                avatarImageString: "nil", description: aboutMeTextField.text,
+                                                avatarImage: fullImageView.circleImageView.image, description: aboutMeTextField.text,
                                                 sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { result in
             switch result {
             
             case .success(let mUser):
                 self.showAlert(with: "Success!", and: "Have a nice chats!") {
-                    self.present(MainTabBarController(), animated: true, completion: nil)
+                    let mainTabBarVC = MainTabBarController(currentUser: mUser)
+                    mainTabBarVC.modalPresentationStyle = .fullScreen
+                    self.present(mainTabBarVC, animated: true, completion: nil)
                 }
             case .failure(let error):
                 self.showAlert(with: "Failure...", and: error.localizedDescription)
             }
         }
+    }
+    
+    @objc private func plusButtonTapped() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
+    }
+}
+
+//MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
+extension SetupProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        fullImageView.circleImageView.image = image
     }
 }
 
